@@ -108,23 +108,11 @@ Este proyecto esta licenciado bajo la Licencia MIT.
 
 Copyright (c) 2025 Fernando Mellado C.
 
-Se concede permiso, libre de cargos, a cualquier persona que obtenga una copia
-de este software y de los archivos de documentacion asociados (el "Software"),
-para utilizar el Software sin restriccion, incluyendo sin limitacion los derechos
-de usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y/o
-vender copias del Software, y para permitir a las personas a las que se les
-proporcione el Software a hacer lo mismo, sujeto a las siguientes condiciones:
+Se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentacion asociados (el "Software"), para utilizar el Software sin restriccion, incluyendo sin limitacion los derechos de usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y/o vender copias del Software, y para permitir a las personas a las que se les proporcione el Software a hacer lo mismo, sujeto a las siguientes condiciones:
 
-El aviso de copyright anterior y este aviso de permiso se incluiran en todas
-las copias o partes sustanciales del Software.
+El aviso de copyright anterior y este aviso de permiso se incluiran en todas las copias o partes sustanciales del Software.
 
-EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTIA DE NINGUN TIPO, EXPRESA
-O IMPLICITA, INCLUYENDO PERO NO LIMITADO A GARANTIAS DE COMERCIALIZACION,
-IDONEIDAD PARA UN PROPOSITO PARTICULAR Y NO INFRACCION. EN NINGUN CASO LOS
-AUTORES O TITULARES DEL COPYRIGHT SERA RESPONSABLES DE NINGUNA RECLAMACION,
-DANOS U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCION CONTRACTUAL, AGRAVIO O
-DE OTRO MODO, DERIVADA DE, FUERA DE O EN CONEXION CON EL SOFTWARE O SU USO
-U OTROS TRATOS EN EL SOFTWARE.
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTIA DE NINGUN TIPO, EXPRESA O IMPLICITA, INCLUYENDO PERO NO LIMITADO A GARANTIAS DE COMERCIALIZACION, IDONEIDAD PARA UN PROPOSITO PARTICULAR Y NO INFRACCION. EN NINGUN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERA RESPONSABLES DE NINGUNA RECLAMACION, DANOS U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCION CONTRACTUAL, AGRAVIO O DE OTRO MODO, DERIVADA DE, FUERA DE O EN CONEXION CON EL SOFTWARE O SU USO U OTROS TRATOS EN EL SOFTWARE.
 
 
 ## Como citar
