@@ -1,5 +1,8 @@
 # Simulacion Analogica de la Ecuacion de Difusion mediante Redes RC: Un Enfoque Experimental para la Ensenanza de la Fisica Computacional
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 ## Descripcion
 
 La ecuacion de difusion es fundamental en multiples areas de la fisica e ingenieria. Este repositorio contiene el codigo, los datos y las figuras de una simulacion computacional que modela el proceso de difusion unidimensional mediante una red de resistencias y capacitores (RC) de 1x5 nodos. El trabajo se fundamenta en la analogia matematica entre la ecuacion de difusion de Fourier y la ecuacion de nodo de Kirchhoff en una red RC.
