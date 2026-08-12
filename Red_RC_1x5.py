@@ -1,19 +1,23 @@
 # ============================================================
-# SIMULACIÓN DE RED RC 1x5 CON NEUMANN EN EXTREMO DERECHO
+# SIMULACIÓN DE RED RC 1x5 - CON PARÁMETROS EXPERIMENTALES
 # ============================================================
 # Autor: Fernando Mellado C.
-# Descripción: Implementación del método RK4 para resolver
-# el sistema de EDOs acopladas de una red RC de 5 nodos.
-# Condiciones de frontera:
-#   - Nodo 1: Dirichlet (V = V_frontera)
-#   - Nodo 5: Neumann (flujo nulo, circuito abierto)
+# Fecha: 2025
+#
+# PARÁMETROS REALES DEL CIRCUITO:
+#   R = 33 kΩ
+#   C = 100 µF
+#   τ = R*C = 3.3 s
+#   V_frontera = 5 V (Dirichlet en nodo 1)
+#   Neumann en nodo 5 (extremo derecho)
 # ============================================================
 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
+import pandas as pd
 
-# Configuración de estilo para gráficas
+# Configuración de estilo
 rcParams['font.size'] = 12
 rcParams['axes.grid'] = True
 rcParams['grid.linestyle'] = '--'
@@ -22,169 +26,138 @@ rcParams['grid.alpha'] = 0.7
 # ============================================================
 # 1. PARÁMETROS DEL SISTEMA
 # ============================================================
-R = 10e3          # Resistencia (Ω)
-C = 10e-6         # Capacitancia (F)
-tau = R * C       # Constante de tiempo (s) -> 0.1 s
+R = 33e3          # 33 kΩ
+C = 100e-6        # 100 µF
+tau = R * C       # 3.30 s
 
-V_frontera = 5.0  # Voltaje aplicado en el nodo 1 (V)
+V_frontera = 5.0  # Voltaje aplicado en la frontera izquierda (V)
 V0 = np.zeros(5)  # Condición inicial: todos los nodos a 0V
-t_final = 1.0     # Tiempo total de simulación (s)
-dt = 1e-4         # Paso de integración (s)
+t_final = 60.0    # Tiempo total de simulación (s)
+dt = 0.05         # Paso de integración (s)
 
-# Número de pasos
 N_steps = int(t_final / dt)
 
 # ============================================================
 # 2. DEFINICIÓN DEL SISTEMA DE EDOs
 # ============================================================
-# Vector de estado: V = [V1, V2, V3, V4, V5]
-# Fronteras:
-#   - Nodo 1 (izquierda): Dirichlet -> V0 = V_frontera
-#   - Nodo 5 (derecha): Neumann -> flujo nulo (circuito abierto)
-
 def derivadas(V, t):
-    """
-    Calcula las derivadas dV/dt para el sistema 1x5.
-    V: vector de voltajes [V1, V2, V3, V4, V5]
-    t: tiempo (no se usa explícitamente, pero se mantiene por compatibilidad)
-    """
-    # Condición de frontera izquierda (Dirichlet)
     V_izq = V_frontera
-    
-    # Nodo 1 (conectado a V_izq y V2)
     dV1 = (1/tau) * (V_izq - 2*V[0] + V[1])
-    
-    # Nodos interiores (2, 3, 4)
     dV2 = (1/tau) * (V[0] - 2*V[1] + V[2])
     dV3 = (1/tau) * (V[1] - 2*V[2] + V[3])
     dV4 = (1/tau) * (V[2] - 2*V[3] + V[4])
-    
-    # Nodo 5 (extremo derecho, Neumann: solo conectado a V4)
     dV5 = (1/tau) * (V[3] - V[4])
-    
     return np.array([dV1, dV2, dV3, dV4, dV5])
 
 # ============================================================
-# 3. MÉTODO RK4 (IMPLEMENTACIÓN MANUAL)
+# 3. MÉTODO RK4
 # ============================================================
 def rk4_step(V, t, dt):
-    """
-    Un paso del método de Runge-Kutta de cuarto orden.
-    """
     k1 = derivadas(V, t)
     k2 = derivadas(V + 0.5*dt*k1, t + 0.5*dt)
     k3 = derivadas(V + 0.5*dt*k2, t + 0.5*dt)
     k4 = derivadas(V + dt*k3, t + dt)
-    
-    V_new = V + (dt/6.0) * (k1 + 2*k2 + 2*k3 + k4)
-    return V_new
+    return V + (dt/6.0) * (k1 + 2*k2 + 2*k3 + k4)
 
 # ============================================================
-# 4. EJECUTAR LA SIMULACIÓN
+# 4. EJECUTAR SIMULACIÓN
 # ============================================================
-# Inicializar arreglos para almacenar resultados
 tiempos = np.linspace(0, t_final, N_steps + 1)
 V_hist = np.zeros((N_steps + 1, 5))
 V_hist[0, :] = V0
 
-# Bucle principal de integración
 V_actual = V0.copy()
 for i in range(N_steps):
     V_actual = rk4_step(V_actual, tiempos[i], dt)
     V_hist[i + 1, :] = V_actual
 
 # ============================================================
-# 5. CÁLCULO DE TIEMPOS DE SUBIDA (t_50)
+# 5. CÁLCULO DE t50
 # ============================================================
 def tiempo_subida_50(serie, V_final, tiempo):
-    """
-    Calcula el tiempo en que la señal alcanza el 50% del valor final.
-    """
     umbral = 0.5 * V_final
     idx = np.where(serie >= umbral)[0]
-    if len(idx) > 0:
-        return tiempo[idx[0]]
-    else:
-        return np.nan
+    return tiempo[idx[0]] if len(idx) > 0 else np.nan
 
-V_final_esperado = V_frontera
-t50 = []
+t50_sim = []
 for i in range(5):
-    t = tiempo_subida_50(V_hist[:, i], V_final_esperado, tiempos)
-    t50.append(t)
+    t = tiempo_subida_50(V_hist[:, i], V_frontera, tiempos)
+    t50_sim.append(t)
 
 # ============================================================
-# 6. GENERACIÓN DE GRÁFICAS
+# 6. CARGAR DATOS EXPERIMENTALES (SOLO NODOS 1-4)
 # ============================================================
-# Figura 1: Evolución temporal de los 5 nodos
-fig1, ax1 = plt.subplots(figsize=(10, 6))
+datos_exp = pd.read_excel('datos_RC_individual.xlsx')
+
+tiempos_exp = datos_exp['Tiempo (ms)'].values / 1000.0
+V1_exp = datos_exp['Canal_1 (V)'].values
+V2_exp = datos_exp['Canal_2 (V)'].values
+V3_exp = datos_exp['Canal_3 (V)'].values
+V4_exp = datos_exp['Canal_4 (V)'].values
+
+# ============================================================
+# 7. GRÁFICA: TEORÍA vs EXPERIMENTO (NODOS 1-4)
+# ============================================================
+fig, ax = plt.subplots(figsize=(12, 7))
 
 colores = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
-etiquetas = ['Nodo 1', 'Nodo 2', 'Nodo 3', 'Nodo 4', 'Nodo 5']
 
+# Simulación - TODOS los 5 nodos (para contexto)
 for i in range(5):
-    ax1.plot(tiempos, V_hist[:, i], color=colores[i], 
-             label=etiquetas[i], linewidth=2)
+    ax.plot(tiempos, V_hist[:, i], color=colores[i], 
+            label=f'Nodo {i+1} (sim)', linewidth=2, linestyle='-', alpha=0.7)
 
-ax1.set_xlabel('Tiempo (s)', fontsize=14)
-ax1.set_ylabel('Voltaje (V)', fontsize=14)
-ax1.set_title('Evolución temporal de los voltajes en la red RC 1×5\n(Dirichlet izquierda, Neumann derecha)', fontsize=16)
-ax1.legend(loc='upper left', fontsize=12)
-ax1.grid(True, linestyle='--', alpha=0.6)
+# Datos experimentales - SOLO NODOS 1-4
+ax.scatter(tiempos_exp, V1_exp, color=colores[0], s=10, label='Nodo 1 (exp)', alpha=0.8)
+ax.scatter(tiempos_exp, V2_exp, color=colores[1], s=10, label='Nodo 2 (exp)', alpha=0.8)
+ax.scatter(tiempos_exp, V3_exp, color=colores[2], s=10, label='Nodo 3 (exp)', alpha=0.8)
+ax.scatter(tiempos_exp, V4_exp, color=colores[3], s=10, label='Nodo 4 (exp)', alpha=0.8)
 
-# Anotar los tiempos de subida al 50%
-for i in range(5):
-    if not np.isnan(t50[i]):
-        ax1.axvline(x=t50[i], color=colores[i], linestyle=':', alpha=0.5)
-        ax1.text(t50[i] + 0.02, V_final_esperado * 0.55, 
-                 f'$t_{{50,{i+1}}}$', fontsize=10, color=colores[i])
+ax.axhline(y=2.5, color='black', linestyle=':', alpha=0.5, label='50% de 5V (2.5V)')
 
-ax1.set_xlim(0, 1.0)
-ax1.set_ylim(0, 6.0)
+ax.set_xlabel('Tiempo (s)', fontsize=14)
+ax.set_ylabel('Voltaje (V)', fontsize=14)
+ax.set_title('Comparación: Simulación vs. Experimento\nR = 33 kΩ, C = 100 µF, τ = 3.3 s', fontsize=16)
+ax.legend(loc='upper left', fontsize=10, ncol=2)
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.set_xlim(0, 60)
+ax.set_ylim(0, 5.5)
 
 plt.tight_layout()
-plt.savefig('simulacion_red_1x5_neumann.png', dpi=300, bbox_inches='tight')
+plt.savefig('comparacion_teoria_experimento_33k_100uF.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # ============================================================
-# 7. IMPRESIÓN DE RESULTADOS
+# 8. IMPRESIÓN DE RESULTADOS (SOLO NODOS 1-4)
 # ============================================================
 print("=" * 60)
-print("RESULTADOS DE LA SIMULACIÓN - RED RC 1×5")
-print("(Dirichlet izquierda, Neumann derecha)")
+print("RESULTADOS - RED RC 1×5 (R = 33 kΩ, C = 100 µF)")
 print("=" * 60)
-print(f"Parámetros: R = {R/1000:.1f} kΩ, C = {C*1e6:.1f} µF, τ = {tau:.3f} s")
+print(f"τ = R*C = {tau:.2f} s")
 print(f"Voltaje de frontera: {V_frontera:.1f} V")
 print("-" * 60)
 print("Tiempos de subida al 50% (t_50):")
 print("-" * 60)
-for i in range(5):
-    if not np.isnan(t50[i]):
-        print(f"  Nodo {i+1}: {t50[i]:.4f} s")
+print("  Nodo | Simulado (s) | Medido (s) | Diferencia")
+print("-" * 60)
+
+t50_exp_estimados = [5.5, 26.0, 42.0, np.nan]  # Nodos 1-4
+
+for i in range(4):
+    sim = f"{t50_sim[i]:.2f}" if not np.isnan(t50_sim[i]) else "---"
+    exp = f"{t50_exp_estimados[i]:.1f}" if not np.isnan(t50_exp_estimados[i]) else "---"
+    if i < 3:
+        diff = f"{t50_exp_estimados[i] - t50_sim[i]:.1f}"
     else:
-        print(f"  Nodo {i+1}: No alcanzó el 50%")
+        diff = "---"
+    print(f"  {i+1}    | {sim:>11} | {exp:>9} | {diff:>9}")
 print("=" * 60)
 
-# ============================================================
-# 8. VERIFICACIÓN DE LA EQUIVALENCIA
-# ============================================================
-h = 0.01  # m (espaciado de la malla)
-alpha_equivalente = h**2 / tau
+V1_final_sim = V_hist[-1, 0]
+print(f"\nVoltaje final simulado en Nodo 1: {V1_final_sim:.3f} V")
+print(f"Voltaje final medido en Nodo 1: 3.372 V")
 
-print("\n" + "=" * 60)
-print("VERIFICACIÓN DE LA EQUIVALENCIA FUNDAMENTAL")
+h = 0.01
+alpha_sim = h**2 / tau
+print(f"\nDifusividad equivalente: α = h²/τ = {alpha_sim:.3e} m²/s")
 print("=" * 60)
-print(f"Espaciado de la malla: h = {h*100:.1f} cm = {h:.3f} m")
-print(f"Constante de tiempo: τ = RC = {tau:.3f} s")
-print(f"Difusividad equivalente: α = h²/τ = {alpha_equivalente:.2e} m²/s")
-print("=" * 60)
-
-# ============================================================
-# 9. EXPORTAR DATOS
-# ============================================================
-datos = np.column_stack([tiempos, V_hist])
-np.savetxt('simulacion_red_1x5_neumann.csv', datos, 
-           delimiter=',', 
-           header='t,V1,V2,V3,V4,V5', 
-           comments='')
-print("\nDatos guardados en 'simulacion_red_1x5_neumann.csv'")
