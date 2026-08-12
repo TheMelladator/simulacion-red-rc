@@ -23,7 +23,6 @@ Se implementó un prototipo de 5 nodos (configuración 1×5) con parámetros $R 
 | Archivo | Descripción |
 |---------|-------------|
 | `simulacion_rc_1x5.py` | Script principal de la simulación numérica (RK4) |
-| `simulacion_rc_1x5.ipynb` | Notebook de Jupyter para Google Colab |
 | `datos_RC_individual.xlsx` | Datos experimentales (mediciones reales) |
 | `comparacion_teoria_experimento.png` | Figura comparativa: simulación vs. experimento |
 | `arduino_adquisicion/adquisicion_arduino.ino` | Código para Arduino Uno |
@@ -59,7 +58,7 @@ donde $h$ es el espaciado de la malla espacial. La cantidad $1/(RC)$ tiene unida
 | Resistencia entre nodos | $R$ |$33\,\text{k}\Omega$ |
 | Capacitancia a tierra | $C$ | $100\,\mu\text{F}$ |
 | Constante de tiempo | $\tau = RC$ | $3.30\,\text{s}$ |
-| Voltaje de excitación | $V_0$ | \5\,\text{V}$) |
+| Voltaje de excitación | $V_0$ | $5\,\text{V}$ |
 | Resistencia de alta impedancia | $R_{\text{hi}}$ | $100\,\text{k}\Omega$ |
 | Paso de integración | $\Delta t$ | $0.05\,\text{s}$ |
 | Tiempo total de simulación | $t_{\text{final}}$ | $60.0\,\text{s}$ |
