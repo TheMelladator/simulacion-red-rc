@@ -1,13 +1,13 @@
-# Simulación Analógica de la Ecuación de Difusión mediante Redes RC
+# Simulación analógica de la ecuación de difusión mediante redes RC
 
-## Un Enfoque Experimental para la Enseñanza de la Física Computacional
+## Un enfoque experimental para la enseñanza de la física
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
 ![Arduino](https://img.shields.io/badge/Arduino-Uno-00979D?logo=arduino&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ---
 
-## 📖 Resumen
+## Resumen
 
 La ecuación de difusión es fundamental en múltiples áreas de la física e ingeniería. En este trabajo presentamos el desarrollo teórico y la validación experimental de un computador analógico basado en una red de resistencias y capacitores (RC) que resuelve la ecuación de difusión en tiempo real. Se establece la analogía formal entre el sistema térmico y el circuito eléctrico, derivando la equivalencia matemática entre la difusividad térmica α, el espaciado de la malla h y la constante de tiempo del circuito RC:
 
@@ -19,7 +19,7 @@ Se implementó un prototipo de 5 nodos (configuración 1×5) con parámetros $R 
 
 ---
 
-## 📂 Contenido del repositorio
+## Contenido del repositorio
 
 | Archivo | Descripción |
 |---------|-------------|
@@ -32,7 +32,7 @@ Se implementó un prototipo de 5 nodos (configuración 1×5) con parámetros $R 
 
 ---
 
-## 🧠 Marco teórico: la analogía térmico-eléctrica
+## Marco teórico: la analogía térmico-eléctrica
 
 La conducción de calor en un medio isotrópico está gobernada por la ecuación de calor:
 
@@ -52,7 +52,7 @@ donde $h$ es el espaciado de la malla espacial. La cantidad $1/(RC)$ tiene unida
 
 ---
 
-## ⚙️ Parámetros de la simulación y el experimento
+## Parámetros de la simulación y el experimento
 
 | Parámetro | Símbolo | Valor |
 |:----------|:--------|:------|
@@ -74,7 +74,7 @@ donde $h$ es el espaciado de la malla espacial. La cantidad $1/(RC)$ tiene unida
 **Medición experimental:** Se midieron los nodos 1 a 4. El nodo 5 fue modelado en la simulación pero no se midió físicamente.
 
 ---
-## 🔬 Adquisición de datos experimentales
+## Adquisición de datos experimentales
 
 Los datos experimentales fueron capturados utilizando un **Arduino Uno** como sistema de adquisición de bajo costo. Los voltajes en los nodos 1 a 4 de la red RC se conectaron directamente a las entradas analógicas **A0, A1, A2 y A3** del Arduino.
 
@@ -150,7 +150,7 @@ A pesar de las diferencias cuantitativas, el comportamiento cualitativo es el mi
 
 ---
 
-## 🛠️ Requisitos
+## Requisitos
 
 - Python 3.10+
 - NumPy
@@ -159,7 +159,7 @@ A pesar de las diferencias cuantitativas, el comportamiento cualitativo es el mi
 - openpyxl (para leer archivos .xlsx)
 - pyserial (para comunicación con Arduino)
 
-## 🚀 Cómo ejecutar
+## Cómo ejecutar
 
 ### En local (con Python)
 
@@ -216,7 +216,7 @@ Instituto Politécnico Nacional
 Av. Instituto Politécnico Nacional S/N, Edif. 9, Col. Nueva Industrial Vallejo, Gustavo A. Madero, C.P. 07700, Ciudad de México.  
 Correo: luisfernandomelladocanas@outlook.com
 
-## 📝 Cómo citar
+## Cómo citar
 
 Si utilizas este código o estos datos, por favor cita:
 
@@ -224,7 +224,7 @@ Si utilizas este código o estos datos, por favor cita:
 
 ---
 
-## 📚 Referencias
+## Referencias
 
 [1] V. Bush, "The Differential Analyzer: A New Machine for Solving Differential Equations," *Journal of the Franklin Institute*, vol. 212, no. 4, pp. 447–488, 1931, doi: 10.1016/S0016-0032(31)90616-9.
 
@@ -256,6 +256,6 @@ Si utilizas este código o estos datos, por favor cita:
 
 ---
 
-## 📜 Licencia
+## Licencia
 
 Este proyecto se distribuye con fines académicos y educativos. Para uso comercial, contactar al autor.
