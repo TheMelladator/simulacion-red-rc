@@ -2,8 +2,9 @@
 
 ## Un Enfoque Experimental para la Enseñanza de la Física Computacional
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TheMelladator/simulacion-red-rc-1x5/blob/main/simulacion_rc_1x5.ipynb)
-
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
+![Arduino](https://img.shields.io/badge/Arduino-Uno-00979D?logo=arduino&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 ---
 
 ## 📖 Resumen
