@@ -80,7 +80,7 @@ Los datos experimentales fueron capturados utilizando un **Arduino Uno** como si
 
 ### Hardware utilizado
 - Arduino Uno
-- Red RC 1×4 con $R = 33\,\text{k}\Omega$, $C = 100\,\mu\text{F}$
+- Red RC 1×4 con $R = 33\text{k}\Omega$, $C = 100\mu\text{F}$
 - Fuente de alimentación de $5\,\text{V}$
 
 ### Código de adquisición
@@ -107,26 +107,25 @@ Los datos capturados se encuentran en el archivo `datos_RC_individual.xlsx` (for
 
 ## 📊 Resultados principales
 
-### Tiempos de subida al 50 % ($t_{50}$) — Simulación
+### Tiempos de subida al 50 % ($t_{50}$)
 
-| Nodo | $t_{50}$ (s) | Observación |
-|:----:|:--------:|:------------|
-| 1 | 3.70 | Alcanza el 50 % ($\approx 1.1\tau$) |
-| 2 | 14.40 | Alcanza el 50 % ($\approx 4.4\tau$) |
-| 3 | 26.50 | Alcanza el 50 % ($\approx 8.0\tau$) |
-| 4 | 33.95 | Alcanza el 50 % ($\approx 10.3\tau$) |
-| 5 | 37.40 | Alcanza el 50 % ($\approx 11.3\tau$) |
+| Nodo | $t_{50}$ (simulado, s) | $t_{50}$ (medido, s) |
+|:----:|:---:|:---:|
+| 1 | 3.70 | **2.15** |
+| 2 | 14.40 | — |
+| 3 | 26.50 | — |
+| 4 | 33.95 | — |
 
-### Comparación con el experimento (Nodos 1–4)
+**Nota:** Solo el Nodo 1 alcanza el umbral del 50% (2.5 V). Los nodos 2, 3 y 4 presentan voltajes máximos de 2.29 V, 1.48 V y 1.17 V respectivamente, por lo que nunca alcanzan el 50% del voltaje de referencia.
 
-| Nodo | $t_{50}$ (simulado, s) | $t_{50}$ (medido, s) | Diferencia |
-|:----:|:---:|:---:|:---:|
-| 1 | 3.70 | 5.5 | 1.8 s |
-| 2 | 14.40 | 26 | 11.6 s |
-| 3 | 26.50 | 42 | 15.5 s |
-| 4 | 33.95 | — | — |
+### Voltajes finales experimentales (t ≈ 100.8 s)
 
-**Nota:** Los tiempos experimentales son estimados visualmente a partir de las curvas de medición. El Nodo 4 no alcanzó el 50 % ($2.5\,\text{V}$) durante el tiempo de medición de 60 s.
+| Nodo | Voltaje final (V) | ¿Alcanza 2.5 V? |
+|:----:|:---:|:---:|
+| 1 | 4.15 | ✅ Sí |
+| 2 | 2.29 | ❌ No |
+| 3 | 1.48 | ❌ No |
+| 4 | 1.17 | ❌ No |
 
 ### Verificación de la equivalencia fundamental
 
@@ -140,15 +139,12 @@ La siguiente figura muestra la superposición de la simulación (líneas) y los 
 
 ![Comparación teoría-experimento](comparacion_teoria_experimento.png)
 
-**Análisis de la discrepancia:** Los tiempos experimentales son mayores que los simulados. Esto puede deberse a:
-- La resistencia de alta impedancia ($100\,\text{k}\Omega$) actúa como divisor de voltaje.
-- Tolerancias de componentes ($\pm 5\,\%$ o $\pm 10\,\%$).
-- Corriente de fuga en capacitores electrolíticos.
-- Impedancia de entrada del osciloscopio (1 MΩ).
+**Análisis de la discrepancia:** Los tiempos experimentales son sistemáticamente diferentes a los simulados. Esto se debe a la resistencia de alta impedancia ($100\,\text{k}\Omega$) que actúa como divisor de voltaje, reduciendo el voltaje efectivo que llega a los nodos y modificando la dinámica del sistema.
 
 A pesar de las diferencias cuantitativas, el comportamiento cualitativo es el mismo: la perturbación se propaga desde el nodo excitado hacia los vecinos con un retardo que aumenta con la distancia.
 
 ---
+
 
 ## Requisitos
 

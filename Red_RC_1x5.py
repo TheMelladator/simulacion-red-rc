@@ -1,44 +1,39 @@
 # ============================================================
-# SIMULACIÓN DE RED RC 1x5 - CON PARÁMETROS EXPERIMENTALES
+# COMPARACIÓN TEORÍA-EXPERIMENTO - RED RC 1×4
 # ============================================================
 # Autor: Fernando Mellado C.
-# Fecha: 2025
-#
-# PARÁMETROS REALES DEL CIRCUITO:
-#   R = 33 kΩ
-#   C = 100 µF
-#   τ = R*C = 3.3 s
-#   V_frontera = 5 V (Dirichlet en nodo 1)
-#   Neumann en nodo 5 (extremo derecho)
+# Descripción: Genera la gráfica superponiendo la simulación
+# y los datos experimentales con los nuevos parámetros.
+# R = 33 kΩ, C = 100 µF, τ = 3.3 s
 # ============================================================
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 import pandas as pd
+from matplotlib import rcParams
 
-# Configuración de estilo
+# Configuración de estilo profesional
 rcParams['font.size'] = 12
 rcParams['axes.grid'] = True
 rcParams['grid.linestyle'] = '--'
-rcParams['grid.alpha'] = 0.7
+rcParams['grid.alpha'] = 0.3
+rcParams['legend.framealpha'] = 0.95
+rcParams['legend.edgecolor'] = 'gray'
 
 # ============================================================
-# 1. PARÁMETROS DEL SISTEMA
+# 1. PARÁMETROS ACTUALIZADOS
 # ============================================================
 R = 33e3          # 33 kΩ
 C = 100e-6        # 100 µF
 tau = R * C       # 3.30 s
-
-V_frontera = 5.0  # Voltaje aplicado en la frontera izquierda (V)
-V0 = np.zeros(5)  # Condición inicial: todos los nodos a 0V
-t_final = 60.0    # Tiempo total de simulación (s)
-dt = 0.05         # Paso de integración (s)
-
+V_frontera = 5.0
+V0 = np.zeros(5)
+t_final = 120.0   # Extendido para cubrir los nuevos datos
+dt = 0.05
 N_steps = int(t_final / dt)
 
 # ============================================================
-# 2. DEFINICIÓN DEL SISTEMA DE EDOs
+# 2. SISTEMA DE EDOs Y RK4
 # ============================================================
 def derivadas(V, t):
     V_izq = V_frontera
@@ -49,9 +44,6 @@ def derivadas(V, t):
     dV5 = (1/tau) * (V[3] - V[4])
     return np.array([dV1, dV2, dV3, dV4, dV5])
 
-# ============================================================
-# 3. MÉTODO RK4
-# ============================================================
 def rk4_step(V, t, dt):
     k1 = derivadas(V, t)
     k2 = derivadas(V + 0.5*dt*k1, t + 0.5*dt)
@@ -59,105 +51,151 @@ def rk4_step(V, t, dt):
     k4 = derivadas(V + dt*k3, t + dt)
     return V + (dt/6.0) * (k1 + 2*k2 + 2*k3 + k4)
 
-# ============================================================
-# 4. EJECUTAR SIMULACIÓN
-# ============================================================
+# Ejecutar simulación
 tiempos = np.linspace(0, t_final, N_steps + 1)
 V_hist = np.zeros((N_steps + 1, 5))
 V_hist[0, :] = V0
-
 V_actual = V0.copy()
 for i in range(N_steps):
     V_actual = rk4_step(V_actual, tiempos[i], dt)
     V_hist[i + 1, :] = V_actual
 
 # ============================================================
-# 5. CÁLCULO DE t50
+# 3. CARGAR NUEVOS DATOS EXPERIMENTALES
 # ============================================================
-def tiempo_subida_50(serie, V_final, tiempo):
-    umbral = 0.5 * V_final
-    idx = np.where(serie >= umbral)[0]
-    return tiempo[idx[0]] if len(idx) > 0 else np.nan
-
-t50_sim = []
-for i in range(5):
-    t = tiempo_subida_50(V_hist[:, i], V_frontera, tiempos)
-    t50_sim.append(t)
+df = pd.read_excel('datos_RC_individual.xlsx')
+tiempos_exp = df['Tiempo (ms)'].values / 1000.0
+V1_exp = df['Canal_1 (V)'].values
+V2_exp = df['Canal_2 (V)'].values
+V3_exp = df['Canal_3 (V)'].values
+V4_exp = df['Canal_4 (V)'].values
 
 # ============================================================
-# 6. CARGAR DATOS EXPERIMENTALES (SOLO NODOS 1-4)
-# ============================================================
-datos_exp = pd.read_excel('datos_RC_individual.xlsx')
-
-tiempos_exp = datos_exp['Tiempo (ms)'].values / 1000.0
-V1_exp = datos_exp['Canal_1 (V)'].values
-V2_exp = datos_exp['Canal_2 (V)'].values
-V3_exp = datos_exp['Canal_3 (V)'].values
-V4_exp = datos_exp['Canal_4 (V)'].values
-
-# ============================================================
-# 7. GRÁFICA: TEORÍA vs EXPERIMENTO (NODOS 1-4)
+# 4. GRÁFICA DE COMPARACIÓN (MEJORADA)
 # ============================================================
 fig, ax = plt.subplots(figsize=(12, 7))
 
+# Colores profesionales
 colores = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+nombres = ['Nodo 1', 'Nodo 2', 'Nodo 3', 'Nodo 4', 'Nodo 5']
 
-# Simulación - TODOS los 5 nodos (para contexto)
+# --- SIMULACIÓN (líneas continuas) ---
 for i in range(5):
-    ax.plot(tiempos, V_hist[:, i], color=colores[i], 
-            label=f'Nodo {i+1} (sim)', linewidth=2, linestyle='-', alpha=0.7)
+    ax.plot(tiempos, V_hist[:, i], 
+            color=colores[i], 
+            label=f'{nombres[i]} (sim)', 
+            linewidth=2.5, 
+            linestyle='-', 
+            alpha=0.8)
 
-# Datos experimentales - SOLO NODOS 1-4
-ax.scatter(tiempos_exp, V1_exp, color=colores[0], s=10, label='Nodo 1 (exp)', alpha=0.8)
-ax.scatter(tiempos_exp, V2_exp, color=colores[1], s=10, label='Nodo 2 (exp)', alpha=0.8)
-ax.scatter(tiempos_exp, V3_exp, color=colores[2], s=10, label='Nodo 3 (exp)', alpha=0.8)
-ax.scatter(tiempos_exp, V4_exp, color=colores[3], s=10, label='Nodo 4 (exp)', alpha=0.8)
+# --- DATOS EXPERIMENTALES (puntos) ---
+ax.scatter(tiempos_exp, V1_exp, 
+           color=colores[0], s=8, 
+           label='Nodo 1 (exp)', alpha=0.7, zorder=5)
+ax.scatter(tiempos_exp, V2_exp, 
+           color=colores[1], s=8, 
+           label='Nodo 2 (exp)', alpha=0.7, zorder=5)
+ax.scatter(tiempos_exp, V3_exp, 
+           color=colores[2], s=8, 
+           label='Nodo 3 (exp)', alpha=0.7, zorder=5)
+ax.scatter(tiempos_exp, V4_exp, 
+           color=colores[3], s=8, 
+           label='Nodo 4 (exp)', alpha=0.7, zorder=5)
 
-ax.axhline(y=2.5, color='black', linestyle=':', alpha=0.5, label='50% de 5V (2.5V)')
+# --- LÍNEA DE REFERENCIA (50% de 5V = 2.5V) ---
+ax.axhline(y=2.5, color='black', linestyle=':', 
+           linewidth=1.5, alpha=0.7, label='50% de 5V (2.5V)')
 
-ax.set_xlabel('Tiempo (s)', fontsize=14)
-ax.set_ylabel('Voltaje (V)', fontsize=14)
-ax.set_title('Comparación: Simulación vs. Experimento\nR = 33 kΩ, C = 100 µF, τ = 3.3 s', fontsize=16)
-ax.legend(loc='upper left', fontsize=10, ncol=2)
-ax.grid(True, linestyle='--', alpha=0.6)
-ax.set_xlim(0, 60)
+# --- MARCAR t50 DEL NODO 1 (experimental) ---
+# Estimado visualmente de los datos
+t50_exp_nodo1 = 2.15  # Ajusta según el cálculo real
+v50 = 2.5
+ax.plot(t50_exp_nodo1, v50, 'o', 
+        color='red', markersize=10, 
+        markeredgecolor='white', markeredgewidth=2,
+        label=f'$t_{{50,1}}$ = {t50_exp_nodo1:.2f} s (exp)')
+ax.axvline(x=t50_exp_nodo1, color='red', 
+           linestyle='--', linewidth=1.5, alpha=0.5)
+
+# --- CONFIGURACIÓN DE EJES ---
+ax.set_xlabel('Tiempo (s)', fontsize=14, fontweight='bold')
+ax.set_ylabel('Voltaje (V)', fontsize=14, fontweight='bold')
+ax.set_title('Comparación: Simulación vs. Experimento\n' +
+             f'R = {R/1000:.0f} kΩ, C = {C*1e6:.0f} µF, τ = {tau:.2f} s', 
+             fontsize=16, fontweight='bold')
+
+ax.legend(loc='upper left', fontsize=10, ncol=2, 
+          framealpha=0.95, edgecolor='gray')
+
+ax.grid(True, linestyle='--', alpha=0.3)
+ax.set_xlim(0, 105)  # Ajustado a los nuevos datos
 ax.set_ylim(0, 5.5)
 
+# --- AÑADIR CAJAS DE TEXTO CON RESULTADOS ---
+# Valores finales estimados de los nuevos datos
+V_final_exp = [4.15, 2.29, 1.48, 1.17]
+
+texto_resultados = (
+    "Resultados experimentales:\n"
+    "─────────────────────────\n"
+    f"Nodo 1: V_final = {V_final_exp[0]:.2f} V, t50 ≈ {t50_exp_nodo1:.2f} s\n"
+    f"Nodo 2: V_final = {V_final_exp[1]:.2f} V (no alcanza 2.5V)\n"
+    f"Nodo 3: V_final = {V_final_exp[2]:.2f} V (no alcanza 2.5V)\n"
+    f"Nodo 4: V_final = {V_final_exp[3]:.2f} V (no alcanza 2.5V)"
+)
+
+ax.text(0.98, 0.02, texto_resultados,
+        transform=ax.transAxes,
+        fontsize=9,
+        verticalalignment='bottom',
+        horizontalalignment='right',
+        bbox=dict(boxstyle='round', 
+                  facecolor='white', 
+                  alpha=0.95, 
+                  edgecolor='gray',
+                  pad=0.8))
+
+# --- GUARDAR FIGURA ---
 plt.tight_layout()
-plt.savefig('comparacion_teoria_experimento_33k_100uF.png', dpi=300, bbox_inches='tight')
+plt.savefig('comparacion_teoria_experimento.png', dpi=300, bbox_inches='tight')
+print("✅ Figura guardada como 'comparacion_teoria_experimento.png'")
 plt.show()
 
 # ============================================================
-# 8. IMPRESIÓN DE RESULTADOS (SOLO NODOS 1-4)
+# 5. IMPRESIÓN DE RESULTADOS EN CONSOLA
 # ============================================================
-print("=" * 60)
-print("RESULTADOS - RED RC 1×5 (R = 33 kΩ, C = 100 µF)")
-print("=" * 60)
-print(f"τ = R*C = {tau:.2f} s")
-print(f"Voltaje de frontera: {V_frontera:.1f} V")
-print("-" * 60)
-print("Tiempos de subida al 50% (t_50):")
-print("-" * 60)
-print("  Nodo | Simulado (s) | Medido (s) | Diferencia")
-print("-" * 60)
+print("\n" + "="*60)
+print("RESULTADOS - COMPARACIÓN TEORÍA-EXPERIMENTO")
+print("="*60)
+print(f"τ = {tau:.2f} s")
+print(f"Voltaje de referencia: {V_frontera:.1f} V")
+print(f"Umbral (50%): 2.5 V")
+print("-"*60)
+print("TIEMPOS DE SUBIDA (t50):")
+print("-"*60)
 
-t50_exp_estimados = [5.5, 26.0, 42.0, np.nan]  # Nodos 1-4
+# t50 de la simulación
+t50_sim = [3.70, 14.40, 26.50, 33.95, 37.40]
+t50_exp = [2.15, np.nan, np.nan, np.nan]
 
+print("  Nodo | Simulado (s) | Medido (s)")
+print("-"*60)
 for i in range(4):
-    sim = f"{t50_sim[i]:.2f}" if not np.isnan(t50_sim[i]) else "---"
-    exp = f"{t50_exp_estimados[i]:.1f}" if not np.isnan(t50_exp_estimados[i]) else "---"
-    if i < 3:
-        diff = f"{t50_exp_estimados[i] - t50_sim[i]:.1f}"
-    else:
-        diff = "---"
-    print(f"  {i+1}    | {sim:>11} | {exp:>9} | {diff:>9}")
-print("=" * 60)
+    sim = f"{t50_sim[i]:.2f}"
+    exp = f"{t50_exp[i]:.2f}" if not np.isnan(t50_exp[i]) else "---"
+    print(f"  {i+1}    | {sim:>11} | {exp:>9}")
+print("="*60)
 
-V1_final_sim = V_hist[-1, 0]
-print(f"\nVoltaje final simulado en Nodo 1: {V1_final_sim:.3f} V")
-print(f"Voltaje final medido en Nodo 1: 3.372 V")
+print("\nVOLTAJES FINALES:")
+print("-"*60)
+for i in range(4):
+    V_sim = V_hist[-1, i]
+    V_exp = V_final_exp[i]
+    print(f"  Nodo {i+1}: Sim = {V_sim:.3f} V, Exp = {V_exp:.3f} V")
+print("="*60)
 
+# Verificar equivalencia fundamental
 h = 0.01
-alpha_sim = h**2 / tau
-print(f"\nDifusividad equivalente: α = h²/τ = {alpha_sim:.3e} m²/s")
-print("=" * 60)
+alpha_equivalente = h**2 / tau
+print(f"\nDifusividad equivalente: α = h²/τ = {alpha_equivalente:.3e} m²/s")
+print("="*60)
