@@ -66,20 +66,20 @@ $$\boxed{\alpha = \frac{h^{2}}{R_d C} = \frac{h^{2}}{2R_s C}}$$
 
 | Parámetro | Símbolo | Valor |
 |:----------|:--------|:------|
-| Resistencia de fuente | \(R_s\) | \(33\,\text{k}\Omega\) |
-| Resistencia entre nodos | \(R_d = 2R_s\) | \(66\,\text{k}\Omega\) |
-| Capacitancia a tierra | \(C\) | \(100\,\mu\text{F}\) |
-| Constante de tiempo de fuente | \(\tau_s = R_s C\) | \(3.30\,\text{s}\) |
-| Constante de tiempo de difusión | \(\tau_d = R_d C\) | \(6.60\,\text{s}\) |
-| Voltaje de excitación | \(V_0\) | \(5.0\,\text{V}\) |
-| Paso de integración | \(\Delta t\) | \(0.05\,\text{s}\) |
-| Tiempo total de simulación | \(t_{\text{final}}\) | \(120.0\,\text{s}\) |
-| Número de nodos | \(N\) | 4 |
-| Espaciado de malla | \(h\) | \(1.0\,\text{cm}\) |
-| Difusividad equivalente | \(\alpha = h^2/(R_d C)\) | \(1.515 \times 10^{-5}\,\text{m}^2/\text{s}\) |
+| Resistencia de fuente | $R_s$ | $33\,\text{k}\Omega$ |
+| Resistencia entre nodos | $R_d = 2R_s$ | $66\,\text{k}\Omega$ |
+| Capacitancia a tierra | $C$ | $100\,\mu\text{F}$ |
+| Constante de tiempo de fuente | $\tau_s = R_s C$ | $3.30\,\text{s}$ |
+| Constante de tiempo de difusión | $\tau_d = R_d C$ | $6.60\,\text{s}$ |
+| Voltaje de excitación | $V_0$ | $5.0\,\text{V}$ |
+| Paso de integración | $\Delta t$ | $0.05\,\text{s}$ |
+| Tiempo total de simulación | $t_{\text{final}}$ | $120.0\,\text{s}$ |
+| Número de nodos | $N$ | 4 |
+| Espaciado de malla | $h$ | $1.0\,\text{cm}$ |
+| Difusividad equivalente | $\alpha = h^2/(R_d C)$ | $1.515 \times 10^{-5}\,\text{m}^2/\text{s}$ |
 
 **Condiciones de frontera implementadas:**
-- **Extremo izquierdo (Nodo 1):** Dirichlet (voltaje fijo \(V_0 = 5.0\,\text{V}\))
+- **Extremo izquierdo (Nodo 1):** Dirichlet (voltaje fijo $V_0 = 5.0\,\text{V}$)
 - **Extremo derecho (Nodo 4):** Neumann (corriente nula, circuito abierto — equivalente a aislamiento térmico)
 
 ---
@@ -90,8 +90,8 @@ Los datos experimentales fueron capturados utilizando un **Arduino Uno** como si
 
 ### Hardware utilizado
 - Arduino Uno
-- Red RC 1×4 con \(R_s = 33\,\text{k}\Omega\), \(R_d = 66\,\text{k}\Omega\), \(C = 100\,\mu\text{F}\)
-- Fuente de alimentación de \(5\,\text{V}\)
+- Red RC 1×4 con $R_s = 33\,\text{k}\Omega$, $R_d = 66\,\text{k}\Omega$, $C = 100\,\mu\text{F}$
+- Fuente de alimentación de $5\,\text{V}$
 - Botón de control toggle para iniciar/detener la medición
 
 ### Configuraciones experimentales
@@ -124,9 +124,9 @@ Los datos capturados se encuentran en el archivo `datos_RC_individual.xlsx` (for
 
 ### Simulación con topología real (1×4)
 
-La simulación utiliza el modelo corregido con \(R_s = 33\,\text{k}\Omega\) y \(R_d = 66\,\text{k}\Omega\).
+La simulación utiliza el modelo corregido con $R_s = 33\,\text{k}\Omega$ y $R_d = 66\,\text{k}\Omega$.
 
-| Nodo | \(t_{50}\) (simulado, s) | Voltaje final (V) |
+| Nodo | $t_{50}$ (simulado, s) | Voltaje final (V) |
 |:----:|:---:|:---:|
 | 1 | 2.89 | 4.93 |
 | 2 | 16.96 | 4.87 |
@@ -135,7 +135,7 @@ La simulación utiliza el modelo corregido con \(R_s = 33\,\text{k}\Omega\) y \(
 
 ### Resultados experimentales (sin carga)
 
-| Nodo | Voltaje a 104.6 s (V) | \(t_{50}\) (s) |
+| Nodo | Voltaje a 104.6 s (V) | $t_{50}$ (s) |
 |:----:|:---:|:---:|
 | 1 | 4.839 | 2.3 |
 | 2 | 4.521 | 8.5 |
@@ -155,7 +155,7 @@ La simulación utiliza el modelo corregido con \(R_s = 33\,\text{k}\Omega\) y \(
 
 ### Verificación de la equivalencia fundamental
 
-Con \(h = 1.0\,\text{cm} = 0.010\,\text{m}\) y \(\tau_d = R_d C = 6.60\,\text{s}\):
+Con $h = 1.0\,\text{cm} = 0.010\,\text{m}$ y $\tau_d = R_d C = 6.60\,\text{s}$:
 
 $$\alpha = \frac{(0.010\ \text{m})^{2}}{6.60\ \text{s}} = 1.515 \times 10^{-5}\ \text{m}^{2}/\text{s}$$
 
