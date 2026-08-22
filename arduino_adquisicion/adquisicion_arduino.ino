@@ -1,112 +1,94 @@
-// Sistema RC con 4 capacitores - CONTROL TOGGLE
-// Botón: Inicia/Pausa la medición
-// R = 33kΩ, C = 100μF
-// Alimentación desde Arduino (5V) - SIN DIVISORES
+// ============================================================
+// SISTEMA RC 1×4 - OSCILOSCOPIO CON ARDUINO UNO
+// ============================================================
+// Autor: Fernando Mellado C.
+// Descripción: Adquisición de datos con control por botón.
+// Cada presión del botón inicia una medición de duración fija.
+// ============================================================
 
-const int PIN_CARGA = 12;      // Pin que alimenta los capacitores
-const int PIN_LED = 13;        // Pin para el LED indicador
-const int PIN_BOTON = 2;       // Pin para el botón de control
-
+const int PIN_CARGA = 12;
+const int PIN_LED = 13;
+const int PIN_BOTON = 2;
 const int NUM_CANALES = 4;
 const int PINES[NUM_CANALES] = {A0, A1, A2, A3};
-const float V_REF = 5.0;       // Ajustar según medición real
+
+const float V_REF = 5.0;
 const int RESOLUCION = 1023;
+const int INTERVALO_MUESTREO_MS = 50;
+const unsigned long DURACION_MUESTREO_MS = 60000;
 
-const int INTERVALO_MUESTREO_MS = 50;  // 50ms = 20 muestras/segundo
-
-// Estados del sistema
-bool medicionActiva = false;      // TRUE = midiendo, FALSE = detenido
+bool medicionActiva = false;
 bool botonPresionado = false;
-bool ultimoEstadoBoton = HIGH;    // Para detectar flancos
+bool ultimoEstadoBoton = HIGH;
 unsigned long ultimoDebounce = 0;
-const unsigned long DEBOUNCE_DELAY = 50;  // 50ms anti-rebote
+const unsigned long DEBOUNCE_DELAY = 50;
 
 unsigned long tiempoInicio;
-int contadorMuestras = 0;
+unsigned long contadorMuestras = 0;
 
 void setup() {
   Serial.begin(115200);
-  
-  // Configurar pines
   pinMode(PIN_CARGA, OUTPUT);
   pinMode(PIN_LED, OUTPUT);
-  pinMode(PIN_BOTON, INPUT_PULLUP);  // Pull-up interno activado
-  
-  // Inicializar
+  pinMode(PIN_BOTON, INPUT_PULLUP);
   digitalWrite(PIN_CARGA, LOW);
   digitalWrite(PIN_LED, LOW);
-  
-  // Configurar pines analógicos
   for (int i = 0; i < NUM_CANALES; i++) {
     pinMode(PINES[i], INPUT);
   }
-  
-  Serial.println("=== SISTEMA RC - CONTROL TOGGLE ===");
-  Serial.println("Presione el botón para INICIAR/DETENER la medición");
-  Serial.println("tiempo_ms,C1_voltaje,C2_voltaje,C3_voltaje,C4_voltaje,LED_estado");
+  Serial.println("=== SISTEMA RC - CONTROL POR BOTON ===");
+  Serial.println("Presione el boton para INICIAR cada medicion");
+  Serial.println("Duracion: 60 segundos");
 }
 
 void loop() {
-  // Leer estado del botón (detección de flanco)
   leerBoton();
-  
-  // Si se presionó el botón, toggle el estado
   if (botonPresionado) {
-    medicionActiva = !medicionActiva;  // Cambiar estado
-    
+    medicionActiva = !medicionActiva;
     if (medicionActiva) {
-      // INICIAR MEDICIÓN
-      digitalWrite(PIN_CARGA, HIGH);    // Comenzar carga
-      digitalWrite(PIN_LED, HIGH);      // Encender LED
+      digitalWrite(PIN_CARGA, HIGH);
+      digitalWrite(PIN_LED, HIGH);
       tiempoInicio = millis();
       contadorMuestras = 0;
       Serial.println("INICIO_MEDICION");
     } else {
-      // DETENER MEDICIÓN
-      digitalWrite(PIN_CARGA, LOW);     // Detener carga
-      digitalWrite(PIN_LED, LOW);       // Apagar LED
+      digitalWrite(PIN_CARGA, LOW);
+      digitalWrite(PIN_LED, LOW);
       Serial.println("FIN_MEDICION");
-      Serial.println("=== MEDICIÓN DETENIDA ===");
     }
-    
-    botonPresionado = false;  // Resetear flag
+    botonPresionado = false;
   }
-  
-  // Si la medición está activa, tomar muestras
   if (medicionActiva) {
-    tomarMuestra();
+    unsigned long tiempoActual = millis() - tiempoInicio;
+    if (tiempoActual >= DURACION_MUESTREO_MS) {
+      medicionActiva = false;
+      digitalWrite(PIN_CARGA, LOW);
+      digitalWrite(PIN_LED, LOW);
+      Serial.println("FIN_MEDICION");
+      Serial.println("=== MEDICION COMPLETADA (60 s) ===");
+    } else {
+      tomarMuestra();
+    }
   }
 }
 
-// --- FUNCIONES ---
-
 void leerBoton() {
   int lectura = digitalRead(PIN_BOTON);
-  
-  // Detectar flanco de bajada (botón presionado)
   if (lectura == LOW && ultimoEstadoBoton == HIGH) {
-    // Anti-rebote
     if ((millis() - ultimoDebounce) > DEBOUNCE_DELAY) {
       botonPresionado = true;
       ultimoDebounce = millis();
     }
   }
-  
   ultimoEstadoBoton = lectura;
 }
 
 void tomarMuestra() {
-  // Calcular tiempo transcurrido
   unsigned long tiempoActual = millis() - tiempoInicio;
-  
-  // Leer los 4 canales
   float voltajes[NUM_CANALES];
   for (int i = 0; i < NUM_CANALES; i++) {
-    int valorADC = analogRead(PINES[i]);
-    voltajes[i] = (valorADC * V_REF) / RESOLUCION;
+    voltajes[i] = analogRead(PINES[i]) * V_REF / RESOLUCION;
   }
-  
-  // Enviar datos por serial
   Serial.print(tiempoActual);
   Serial.print(",");
   for (int i = 0; i < NUM_CANALES; i++) {
@@ -115,9 +97,6 @@ void tomarMuestra() {
   }
   Serial.print(",");
   Serial.println(digitalRead(PIN_LED));
-  
   contadorMuestras++;
-  
-  // Esperar hasta el siguiente intervalo
   delay(INTERVALO_MUESTREO_MS);
 }
