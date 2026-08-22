@@ -193,6 +193,7 @@ pip install numpy matplotlib pandas openpyxl pyserial scipy
 python simulacion_rc_1x4.py
 
 ### Adquisición de datos con Arduino
+```
 
 1. Conectar la red RC al Arduino:
    - Nodo 1 → A0
