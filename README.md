@@ -183,8 +183,8 @@ La siguiente figura muestra la superposición de la simulación (líneas) y los 
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/TheMelladator/simulacion-red-rc-1x5.git
-cd simulacion-red-rc-1x5
+git clone https://github.com/TheMelladator/simulacion-red-rc.git
+cd simulacion-red-rc
 
 # Instalar dependencias
 pip install numpy matplotlib pandas openpyxl pyserial scipy
