@@ -12,7 +12,7 @@
 
 La ecuación de difusión es fundamental en múltiples áreas de la física e ingeniería. En este trabajo presentamos el desarrollo teórico y la validación experimental de un computador analógico basado en una red de resistencias y capacitores (RC) que implementa físicamente una dinámica equivalente a una discretización espacial de la ecuación de difusión.
 
-Se establece la analogía formal entre el sistema térmico y el circuito eléctrico. Para la topología real del prototipo (resistencia de fuente \(R_s = 33\,\text{k}\Omega\) y resistencia efectiva entre nodos \(R_d = 2R_s = 66\,\text{k}\Omega\)), la equivalencia fundamental es:
+Se establece la analogía formal entre el sistema térmico y el circuito eléctrico. Para la topología real del prototipo resistencia de fuente $R_s = 33\,\text{k}\Omega$ y resistencia efectiva entre nodos $R_d = 2R_s = 66\,\text{k}\Omega$, la equivalencia fundamental es:
 
 $$\alpha = \frac{h^{2}}{R_d C} = \frac{h^{2}}{2R_s C}$$
 
