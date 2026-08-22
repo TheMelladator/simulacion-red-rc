@@ -75,42 +75,35 @@ Este enfoque demuestra el potencial de las herramientas de hardware abierto para
 
 ## 📊 Resultados principales
 
-### Comparación de tiempos de subida al 50% ($t_{50}$)
+### Simulación calibrada vs experimento
 
-| Nodo | Simulación (s) | Experimento (s) | Diferencia (%) |
-|:----:|:---:|:---:|:---:|
-| 1 | 2.85 | $2.95 \pm 0.23$ | +3.5 |
-| 2 | 16.60 | $7.95 \pm 0.97$ | -52.1 |
-| 3 | 32.05 | $29.45 \pm 0.13$ | -8.1 |
-| 4 | 39.00 | $36.50 \pm 0.13$ | -6.4 |
-
-### Voltajes finales (t ≈ 60 s)
-
-| Nodo | Simulación (V) | Experimento (V) | Diferencia (V) |
-|:----:|:---:|:---:|:---:|
-| 1 | 4.917 | $4.699 \pm 0.016$ | -0.218 |
-| 2 | 4.783 | $4.342 \pm 0.254$ | -0.441 |
-| 3 | 4.681 | $3.732 \pm 0.068$ | -0.949 |
-| 4 | 4.625 | $3.509 \pm 0.080$ | -1.116 |
+| Nodo | $t_{50}$ Sim (s) | $t_{50}$ Exp (s) | $V$ a 60s Sim (V) | $V$ a 60s Exp (V) |
+|:----:|:---:|:---:|:---:|:---:|
+| 1 | 2.85 | $3.25 \pm 0.08$ | 4.689 | $4.671 \pm 0.010$ |
+| 2 | 16.60 | $18.20 \pm 0.04$ | 4.133 | $4.056 \pm 0.019$ |
+| 3 | 32.05 | $34.00 \pm 0.05$ | 3.708 | $3.594 \pm 0.024$ |
+| 4 | 39.00 | $41.30 \pm 0.04$ | 3.478 | $3.347 \pm 0.027$ |
 
 ### Métricas de concordancia
 
 | Nodo | RMSE (V) | NRMSE (%) |
 |:----:|:---:|:---:|
-| 1 | 0.075 | 1.49 |
-| 2 | 0.098 | 1.96 |
-| 3 | 0.160 | 3.21 |
-| 4 | 0.192 | 3.84 |
+| 1 | 0.083 | **1.66** |
+| 2 | 0.094 | **1.87** |
+| 3 | 0.100 | **2.00** |
+| 4 | 0.102 | **2.04** |
 
 **NRMSE** = (RMSE / 5V) × 100%
 
+Todos los NRMSE son inferiores al 2.1%, lo que confirma cuantitativamente la validez del modelo.
+
 ### Verificación de la equivalencia fundamental
 
-Con $h = 1.0 \text{cm} = 0.010 \text{m}$ y $\tau_d = R_d C = 6.422 \text{s}$:
+Con $h = 1.0\,\text{cm} = 0.010\,\text{m}$ y $\tau_d = R_d C = 6.422\,\text{s}$:
 
 $$\alpha = \frac{(0.010\ \text{m})^{2}}{6.422\ \text{s}} = 1.557 \times 10^{-5}\ \text{m}^{2}/\text{s}$$
 
-Este valor es consistente con la estimación nominal ($1.515 \times 10^{-5} \text{m}^2/\text{s}$), validando la analogía térmico-eléctrica dentro de las tolerancias experimentales.
+Este valor es consistente con la estimación nominal ($1.515 \times 10^{-5}\,\text{m}^2/\text{s}$), validando la analogía térmico-eléctrica dentro de las tolerancias experimentales.
 
 ### Comparación gráfica
 
