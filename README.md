@@ -46,15 +46,15 @@ La conducción de calor en un medio isotrópico está gobernada por la ecuación
 
 $$\frac{\partial T(x,t)}{\partial t} = \alpha \frac{\partial^{2}T(x,t)}{\partial x^{2}}$$
 
-donde \(T(x,t)\) es la temperatura y \(\alpha = k/(\rho c_p)\) es la difusividad térmica.
+donde $T(x,t)$ es la temperatura y $\alpha = k/(\rho c_p)$ es la difusividad térmica.
 
 Aplicando la ley de corrientes de Kirchhoff (LCK) a la red RC 1×4 con topología real:
 
-- **Nodo 1:** \( \displaystyle C \frac{dV_1}{dt} = \frac{V_{\text{fr}} - V_1}{R_s} + \frac{V_2 - V_1}{R_d} \)
-- **Nodos interiores:** \( \displaystyle C \frac{dV_i}{dt} = \frac{V_{i-1} - V_i}{R_d} + \frac{V_{i+1} - V_i}{R_d}, \quad i = 2,3 \)
-- **Nodo 4 (Neumann):** \( \displaystyle C \frac{dV_4}{dt} = \frac{V_3 - V_4}{R_d} \)
+- **Nodo 1:** $ \displaystyle C \frac{dV_1}{dt} = \frac{V_{\text{fr}} - V_1}{R_s} + \frac{V_2 - V_1}{R_d} $
+- **Nodos interiores:** $ \displaystyle C \frac{dV_i}{dt} = \frac{V_{i-1} - V_i}{R_d} + \frac{V_{i+1} - V_i}{R_d}, \quad i = 2,3 $
+- **Nodo 4 (Neumann):** $ \displaystyle C \frac{dV_4}{dt} = \frac{V_3 - V_4}{R_d} $
 
-donde \(R_s = 33\,\text{k}\Omega\) y \(R_d = 2R_s = 66\,\text{k}\Omega\).
+donde $R_s = 33\,\text{k}\Omega$ y $R_d = 2R_s = 66\,\text{k}\Omega$.
 
 Comparando con la discretización por diferencias finitas de la ecuación de calor, se establece la equivalencia fundamental:
 
