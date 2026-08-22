@@ -228,7 +228,7 @@ python simulacion_rc_1x4.py
 Escuela Superior de Física y Matemáticas  
 Instituto Politécnico Nacional  
 Av. Instituto Politécnico Nacional S/N, Edif. 9, Col. Nueva Industrial Vallejo, Gustavo A. Madero, C.P. 07700, Ciudad de México.  
-Correo: luisfernandomelladocanas@outlook.com
+Correo: lmelladoc1400@alumno.ipn.mx
 
 ## Cómo citar
 
