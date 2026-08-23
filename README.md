@@ -12,9 +12,9 @@
 
 La ecuación de difusión es fundamental en múltiples áreas de la física e ingeniería. En este trabajo presentamos el desarrollo teórico y la validación experimental de un computador analógico basado en una red de resistencias y capacitores (RC) que implementa físicamente una dinámica equivalente a una discretización espacial de la ecuación de difusión.
 
-Se establece la analogía formal entre el sistema térmico y el circuito eléctrico. Para la topología real del prototipo (resistencia de fuente $R_s = 32.7\text{k}\Omega$ y resistencia efectiva entre nodos $R_d = 65.4\text{k}\Omega\$, la equivalencia fundamental es $\alpha = h^2/(R_d C)$.
+Se establece la analogía formal entre el sistema térmico y el circuito eléctrico. Para la topología real del prototipo (resistencia de fuente $R_s = 32.7 \pm 0.5\text{k}\Omega$ y resistencia efectiva entre nodos $R_d = 65.4 \pm 0.8\text{k}\Omega$), la equivalencia fundamental es $\alpha = h^2/(R_d C)$.
 
-Se implementó un prototipo de 4 nodos (configuración 1×4) y se diseñó un sistema de adquisición de datos de bajo costo utilizando un Arduino Uno. Se realizaron 5 repeticiones experimentales, obteniendo tiempos de subida al 50% de $t_{50,1} = 2.95 \pm 0.23\text{s}$, $t_{50,2} = 7.95 \pm 0.97 \text{s}$, $t_{50,3} = 29.45 \pm 0.13 \text{s}$ y $t_{50,4} = 36.50 \pm 0.13\text{s}$. La simulación calibrada reproduce la dinámica con un error normalizado inferior al 4%.
+Se implementó un prototipo de 4 nodos (configuración 1×4) y se diseñó un sistema de adquisición de datos de bajo costo utilizando un Arduino Uno. Se realizaron 5 repeticiones experimentales con descarga completa entre mediciones, obteniendo tiempos de subida al 50% de $t_{50,1} = 3.23 \pm 0.18\text{s}$, $t_{50,2} = 18.17 \pm 0.64\text{s}$, $t_{50,3} = 33.97 \pm 0.88\text{s}$ y $t_{50,4} = 41.23 \pm 0.75\text{s}$. La simulación calibrada reproduce la dinámica con un error normalizado inferior al 2.1%, lo que confirma cuantitativamente la validez del modelo.
 
 Este enfoque demuestra el potencial de las herramientas de hardware abierto para la instrumentación científica en la enseñanza de la física.
 
@@ -59,13 +59,15 @@ Este enfoque demuestra el potencial de las herramientas de hardware abierto para
 
 | Parámetro | Símbolo | Valor Medido |
 |:----------|:--------|:------------|
-| Resistencia de fuente | $R_s$ | **32.7 kΩ** |
-| Resistencia entre nodos | $R_d = 2R_s$ | **65.4 kΩ** |
-| Capacitancia | $C$ | **98.2 µF** |
-| Voltaje de fuente | $V_{\text{fr}}$ | **4.99 V** |
-| Constante de fuente | $\tau_s = R_s C$ | **3.211 s** |
-| Constante de difusión | $\tau_d = R_d C$ | **6.422 s** |
-| Difusividad equivalente | $\alpha = h^2/(R_d C)$ | **1.557 × 10⁻⁵ m²/s** |
+| Resistencia de fuente | $R_s$ | $32.7 \pm 0.5 \text{k}\Omega$ |
+| Resistencia entre nodos | $R_d = 2R_s$ | $65.4 \pm 0.8 \text{k}\Omega$ |
+| Capacitancia | $C$ | $98.2 \pm 3.0 \mu\text{F}$ |
+| Voltaje de fuente | $V_{\text{fr}}$ | $4.99 \pm 0.05 \text{V}$ |
+| Constante de fuente | $\tau_s = R_s C$ | $3.211 \pm 0.110 \text{s}$ |
+| Constante de difusión | $\tau_d = R_d C$ | $6.422 \pm 0.206 \text{s}$ |
+| Difusividad equivalente | $\alpha = h^2/(R_d C)$ | $(1.557 \pm 0.050) \times 10^{-5} \text{m}^2/\text{s}$ |
+
+**Nota:** Las incertidumbres de las magnitudes medidas se estimaron a partir de la resolución del multímetro y la desviación estándar de 5 lecturas consecutivas, redondeadas a una cifra significativa. Para $R_d$ se propagó la incertidumbre de $R_s$ y se redondeó de forma conservadora.
 
 **Condiciones de frontera implementadas:**
 - **Extremo izquierdo (Nodo 1):** Dirichlet (voltaje fijo $V_{\text{fr}}$)
@@ -79,10 +81,10 @@ Este enfoque demuestra el potencial de las herramientas de hardware abierto para
 
 | Nodo | $t_{50}$ Sim (s) | $t_{50}$ Exp (s) | $V$ a 60s Sim (V) | $V$ a 60s Exp (V) |
 |:----:|:---:|:---:|:---:|:---:|
-| 1 | 2.85 | $3.25 \pm 0.08$ | 4.689 | $4.671 \pm 0.010$ |
-| 2 | 16.60 | $18.20 \pm 0.04$ | 4.133 | $4.056 \pm 0.019$ |
-| 3 | 32.05 | $34.00 \pm 0.05$ | 3.708 | $3.594 \pm 0.024$ |
-| 4 | 39.00 | $41.30 \pm 0.04$ | 3.478 | $3.347 \pm 0.027$ |
+| 1 | 2.85 | $3.23 \pm 0.18$ | 4.689 | $4.671 \pm 0.010$ |
+| 2 | 16.60 | $18.17 \pm 0.64$ | 4.133 | $4.056 \pm 0.019$ |
+| 3 | 32.05 | $33.97 \pm 0.88$ | 3.708 | $3.594 \pm 0.024$ |
+| 4 | 39.00 | $41.23 \pm 0.75$ | 3.478 | $3.347 \pm 0.027$ |
 
 ### Métricas de concordancia
 
@@ -99,11 +101,11 @@ Todos los NRMSE son inferiores al 2.1%, lo que confirma cuantitativamente la val
 
 ### Verificación de la equivalencia fundamental
 
-Con $h = 1.0\,\text{cm} = 0.010\,\text{m}$ y $\tau_d = R_d C = 6.422\,\text{s}$:
+Con $h = 1.0\text{cm} = 0.010\text{m}$ y $\tau_d = R_d C = 6.422 \pm 0.206\text{s}$:
 
-$$\alpha = \frac{(0.010\ \text{m})^{2}}{6.422\ \text{s}} = 1.557 \times 10^{-5}\ \text{m}^{2}/\text{s}$$
+$$\alpha = \frac{(0.010\ \text{m})^{2}}{6.422\ \text{s}} = 1.557 \times 10^{-5}\ \text{m}^{2}/\text{s}, \qquad \delta\alpha = 0.050 \times 10^{-5}\,\text{m}^2/\text{s}.$$
 
-Este valor es consistente con la estimación nominal ($1.515 \times 10^{-5}\,\text{m}^2/\text{s}$), validando la analogía térmico-eléctrica dentro de las tolerancias experimentales.
+Este valor es consistente con la estimación nominal ($1.515 \times 10^{-5} \text{m}^2/\text{s}$), validando la analogía térmico-eléctrica dentro de las tolerancias experimentales.
 
 ### Comparación gráfica
 
@@ -112,6 +114,7 @@ La siguiente figura muestra la superposición de la simulación calibrada (líne
 ![Comparación teoría-experimento](comparacion_topologia_real.png)
 
 ---
+
 
 ## 🔬 Adquisición de datos experimentales
 
